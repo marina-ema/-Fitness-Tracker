@@ -12,12 +12,12 @@ package javaapplication21;
 public class StrengthActivity implements Activity {
     @Override
     public String getName() {
-        return "Weight Lifting";
+        return "Strength";
     }
 
     @Override
     public String getType() {
-        return "Strength";
+        return "Weight Lifting";
     }
 }
 

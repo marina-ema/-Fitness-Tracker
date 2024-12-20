@@ -4,37 +4,39 @@ import javax.swing.*;
 import java.awt.*;
 
 public class ActivitySelectionForm extends JFrame {
-    private JComboBox<String> activityCombo;  
-    private JComboBox<String> goalCombo;      
-    private JButton createPlanButton;         
-    private JButton showAdviceButton;         
+    private JComboBox<String> activityCombo;
+    private JComboBox<String> goalCombo;
+    private JButton createPlanButton;
+    private JButton showAdviceButton;
+    private JButton selectActivityButton; 
+
     public ActivitySelectionForm() {
         setTitle("Activity Selection");
-        setSize(400, 300); 
+        setSize(400, 350);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        
-        getContentPane().setBackground(new Color(173, 216, 230)); 
+        getContentPane().setBackground(new Color(173, 216, 230));
 
-       
         activityCombo = new JComboBox<>(new String[]{"Cardio", "Strength", "Flexibility"});
-        goalCombo = new JComboBox<>(new String[]{"Weight Loss", "Muscle Gain", "Endurance"}); 
+        goalCombo = new JComboBox<>(new String[]{"Weight Loss", "Muscle Gain", "Endurance"});
         createPlanButton = new JButton("Create Nutrition Plan");
         showAdviceButton = new JButton("Show Activity Advice");
+        selectActivityButton = new JButton("Show Activity Details");
 
-        
-        createPlanButton.setBackground(new Color(135, 206, 250)); 
-        showAdviceButton.setBackground(new Color(135, 206, 250)); 
-        createPlanButton.setForeground(Color.BLACK); 
-        showAdviceButton.setForeground(Color.BLACK); 
+        createPlanButton.setBackground(new Color(135, 206, 250));
+        showAdviceButton.setBackground(new Color(135, 206, 250));
+        selectActivityButton.setBackground(new Color(135, 206, 250)); 
 
-       
+        createPlanButton.setForeground(Color.BLACK);
+        showAdviceButton.setForeground(Color.BLACK);
+        selectActivityButton.setForeground(Color.BLACK); 
+
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10); 
+        gbc.insets = new Insets(10, 10, 10, 10);
 
-        
+      
         gbc.gridx = 0;
         gbc.gridy = 0;
         add(new JLabel("Select Activity:"), gbc);
@@ -44,68 +46,72 @@ public class ActivitySelectionForm extends JFrame {
 
         gbc.gridx = 0;
         gbc.gridy = 1;
-        add(new JLabel("Select Goal:"), gbc);  
+        add(new JLabel("Select Goal:"), gbc);
 
         gbc.gridx = 1;
         add(goalCombo, gbc);
 
+     
         gbc.gridx = 0;
         gbc.gridy = 2;
-        gbc.gridwidth = 2;  
+        gbc.gridwidth = 2;
         add(createPlanButton, gbc);
 
         gbc.gridy = 3;
-        gbc.gridwidth = 2;  
+        gbc.gridwidth = 2;
         add(showAdviceButton, gbc);
 
-        
+       
+        gbc.gridy = 4; 
+        add(selectActivityButton, gbc);
+
         setVisible(true);
 
-        
-        createPlanButton.addActionListener(e -> {
-            String selectedActivity = (String) activityCombo.getSelectedItem();  
-            String goalType = (String) goalCombo.getSelectedItem(); 
 
-           
+        createPlanButton.addActionListener(e -> {
+            String selectedActivity = (String) activityCombo.getSelectedItem();
+            String goalType = (String) goalCombo.getSelectedItem();
+
             String mealPlan = getMealPlanForActivity(selectedActivity);
             int dailyCalories = getCaloriesForActivity(selectedActivity);
 
-           
             NutritionPlan plan = new NutritionPlan.NutritionPlanBuilder()
-                .setGoalType(goalType)  
-                .setMealPlan(mealPlan) 
-                .setDailyCalories(dailyCalories)  
+                .setGoalType(goalType)
+                .setMealPlan(mealPlan)
+                .setDailyCalories(dailyCalories)
                 .build();
 
-           
             JOptionPane.showMessageDialog(null, plan.getDetails(), "Nutrition Plan Details", JOptionPane.INFORMATION_MESSAGE);
         });
 
-        
+      
         showAdviceButton.addActionListener(e -> {
             String selectedActivity = (String) activityCombo.getSelectedItem();
             String goalType = (String) goalCombo.getSelectedItem();
 
-           
             String mealPlan = getMealPlanForActivity(selectedActivity);
             int dailyCalories = getCaloriesForActivity(selectedActivity);
 
-           
             PlanExporter nutritionPlanAdapter = new NutritionPlanAdapter(
                 new NutritionPlan.NutritionPlanBuilder()
                     .setGoalType(goalType)
-                    .setMealPlan(mealPlan)  
-                    .setDailyCalories(dailyCalories)  
+                    .setMealPlan(mealPlan)
+                    .setDailyCalories(dailyCalories)
                     .build(),
                 selectedActivity
             );
 
-           
             JOptionPane.showMessageDialog(null, nutritionPlanAdapter.exportPlanDetails());
+        });
+
+             selectActivityButton.addActionListener(e -> {
+            String selectedType = (String) activityCombo.getSelectedItem();
+            Activity activity = ActivityFactory.createActivity(selectedType);
+            JOptionPane.showMessageDialog(null,
+                "Activity: " + activity.getName() + "\nType: " + activity.getType());
         });
     }
 
-   
     private String getMealPlanForActivity(String activity) {
         switch (activity.toLowerCase()) {
             case "cardio":
@@ -119,23 +125,20 @@ public class ActivitySelectionForm extends JFrame {
         }
     }
 
-    
     private int getCaloriesForActivity(String activity) {
         switch (activity.toLowerCase()) {
             case "cardio":
-                return 2000; 
+                return 2000;
             case "strength":
                 return 2500;
             case "flexibility":
-                return 1800; 
+                return 1800;
             default:
-                return 2000; 
+                return 2000;
         }
     }
 
-   
     private String getAdviceForActivityAndGoal(String activity, String goal) {
-     
         if (activity.equalsIgnoreCase("Cardio")) {
             if (goal.equalsIgnoreCase("Weight Loss")) {
                 return "For Weight Loss, focus on high-intensity cardio exercises and a low-carb diet.";

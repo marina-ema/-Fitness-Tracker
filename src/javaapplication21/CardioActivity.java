@@ -13,12 +13,12 @@ package javaapplication21;
 public class CardioActivity implements Activity {
     @Override
     public String getName() {
-        return "Running";
+        return "Cardio";
     }
 
     @Override
     public String getType() {
-        return "Cardio";
+        return "Running";
     }
 }
 

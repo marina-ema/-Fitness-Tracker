@@ -21,7 +21,7 @@ public class NutritionPlan {
         return "Goal: " + goalType + "\nMeal Plan: " + mealPlan + "\nCalories: " + dailyCalories;
     }
 
-    // الفئة الداخلية Builder
+    
     public static class NutritionPlanBuilder {
         private String goalType;
         private String mealPlan;

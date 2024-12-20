@@ -13,11 +13,11 @@ package javaapplication21;
 public class FlexibilityActivity implements Activity {
     @Override
     public String getName() {
-        return "Yoga";
+        return "Flexibility";
     }
 
     @Override
     public String getType() {
-        return "Flexibility";
+        return "Yoga";
     }
 }
